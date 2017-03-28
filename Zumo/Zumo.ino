@@ -9,7 +9,7 @@
 #define NUM_SENSORS 6
 unsigned int sensor_values[NUM_SENSORS];
 ZumoReflectanceSensorArray sensors;
-const int QTR_THRESHOLD = 500;
+const int QTR_THRESHOLD = 100;
 
 const int echoPin1 = 2;
 const int trigPin1 = 3;
@@ -17,7 +17,7 @@ const int echoPin2 = 5;
 const int trigPin2 = 6;
 const int echoPin3 = A4;
 const int trigPin3 = A5;
-const int maxDistance = 10;
+const int maxDistance = 70;
 
 const int servoPin = A1;
 
@@ -27,7 +27,7 @@ Pushbutton button(ZUMO_BUTTON);
 
 PLab_ZumoMotors plabMotors;
 
-long duration, distance, RightSensor, FrontSensor, LeftSensor;
+long RightSensor, FrontSensor, LeftSensor;
 NewServo servo;
 
 void setup() {
@@ -48,7 +48,6 @@ void loop() {
   RightSensor = SonarSensor(trigPin1, echoPin1);
   FrontSensor = SonarSensor(trigPin2, echoPin2);
   LeftSensor = SonarSensor(trigPin3, echoPin3);
-  servo.write(70);
 
   sensors.read(sensor_values);
 
@@ -60,7 +59,15 @@ void loop() {
   Serial.println(sensor_values[0]);
   Serial.println(sensor_values[4]);
 
-  if (sensor_values[0] > QTR_THRESHOLD || sensor_values[4] > QTR_THRESHOLD) {
+  if (sensor_values[0] < QTR_THRESHOLD) {
+    plabMotors.backward(400, 5);
+    plabMotors.turnRight(400, 120);
+  } else if (sensor_values[4] < QTR_THRESHOLD) {
+    plabMotors.backward(400, 5);
+    plabMotors.turnLeft(400, 120);
+  }
+
+  else {
     if (FrontSensor > 0) {
       if (FrontSensor > 15) {
         motors.setSpeeds(300, 300);
@@ -72,15 +79,8 @@ void loop() {
     } else if (LeftSensor > 0) {
       plabMotors.turnLeft(400, 90);
     } else {
-      searchMode();
+      motors.setSpeeds(300, 300);
     }
-  } else if (sensor_values[4] < QTR_THRESHOLD) {
-    Serial.println("sving venstre!");
-    plabMotors.turnLeft(400, 120);
-  } else if (sensor_values[0] < QTR_THRESHOLD) {
-    Serial.println("sving høyre!");
-    plabMotors.turnRight(400, 120);
-    
   }
 }
 
@@ -89,7 +89,6 @@ float SonarSensor(int trigPin, int echoPin) {
   return sonar.convert_cm(sonar.ping());
 }
 
-void searchMode() {
-  motors.setSpeeds(100, 100);
-}
+
+
 
