@@ -39,7 +39,7 @@ void setup() {
   pinMode(trigPin3, OUTPUT);
   pinMode(echoPin3, INPUT);
   servo.attach(servoPin);
-  servo.write(70);
+  servo.write(64);
   button.waitForButton();
 }
 
