@@ -9,7 +9,7 @@
 #define NUM_SENSORS 6
 unsigned int sensor_values[NUM_SENSORS];
 ZumoReflectanceSensorArray sensors;
-const int QTR_THRESHOLD = 300;
+const int QTR_THRESHOLD = 500;
 
 const int echoPin1 = 2;
 const int trigPin1 = 3;
@@ -17,7 +17,7 @@ const int echoPin2 = 5;
 const int trigPin2 = 6;
 const int echoPin3 = A4;
 const int trigPin3 = A5;
-const int maxDistance = 70;
+const int maxDistance = 10;
 
 const int servoPin = A1;
 
@@ -58,8 +58,9 @@ void loop() {
   Serial.print(" - ");
   Serial.println(RightSensor);
   Serial.println(sensor_values[0]);
+  Serial.println(sensor_values[4]);
 
-  if (sensor_values[0] > QTR_THRESHOLD || sensor_values[5] > QTR_THRESHOLD) {
+  if (sensor_values[0] > QTR_THRESHOLD || sensor_values[4] > QTR_THRESHOLD) {
     if (FrontSensor > 0) {
       if (FrontSensor > 15) {
         motors.setSpeeds(300, 300);
@@ -73,11 +74,14 @@ void loop() {
     } else {
       searchMode();
     }
-    delay(10);
-  } else {
-    plabMotors.backward(200, 20);
+  } else if (sensor_values[4] < QTR_THRESHOLD) {
+    Serial.println("sving venstre!");
+    plabMotors.turnLeft(400, 120);
+  } else if (sensor_values[0] < QTR_THRESHOLD) {
+    Serial.println("sving høyre!");
+    plabMotors.turnRight(400, 120);
+    
   }
-
 }
 
 float SonarSensor(int trigPin, int echoPin) {
@@ -86,7 +90,6 @@ float SonarSensor(int trigPin, int echoPin) {
 }
 
 void searchMode() {
-  motors.setSpeeds(random(0, 300), random(0, 300));
-  delay(10);
+  motors.setSpeeds(100, 100);
 }
 
