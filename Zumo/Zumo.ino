@@ -6,10 +6,9 @@
 #include <QTRSensors.h>
 #include <ZumoReflectanceSensorArray.h>
 
-#define NUM_SENSORS 6
-unsigned int sensor_values[NUM_SENSORS];
+unsigned int sensor_values[6];
 ZumoReflectanceSensorArray sensors;
-const int QTR_THRESHOLD = 100;
+const int QTR_THRESHOLD = 500;
 
 const int echoPin1 = 2;
 const int trigPin1 = 3;
