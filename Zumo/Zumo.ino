@@ -18,6 +18,9 @@ const int echoPin3 = A4;
 const int trigPin3 = A5;
 const int maxDistance = 70;
 
+const int driveSpeed = 325;
+const int pushSpeed = 400;
+
 const int servoPin = A1;
 
 ZumoMotors motors;
@@ -49,14 +52,14 @@ void loop() {
   LeftSensor = SonarSensor(trigPin3, echoPin3);
 
   sensors.read(sensor_values);
-
+/*
   Serial.print(LeftSensor);
   Serial.print(" - ");
   Serial.print(FrontSensor);
   Serial.print(" - ");
   Serial.println(RightSensor);
   Serial.println(sensor_values[0]);
-  Serial.println(sensor_values[4]);
+  Serial.println(sensor_values[4]); */
 
   if (sensor_values[0] < QTR_THRESHOLD) {
     plabMotors.backward(400, 5);
@@ -69,16 +72,16 @@ void loop() {
   else {
     if (FrontSensor > 0) {
       if (FrontSensor > 15) {
-        motors.setSpeeds(300, 300);
+        motors.setSpeeds(driveSpeed, driveSpeed);
       } else {
-        motors.setSpeeds(100, 100);
+        motors.setSpeeds(pushSpeed, pushSpeed);
       }
     } else if (RightSensor > 0) {
       plabMotors.turnRight(400, 90);
     } else if (LeftSensor > 0) {
       plabMotors.turnLeft(400, 90);
     } else {
-      motors.setSpeeds(300, 300);
+      motors.setSpeeds(driveSpeed, driveSpeed);
     }
   }
 }
